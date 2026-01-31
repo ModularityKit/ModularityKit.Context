@@ -7,7 +7,7 @@
 Accepted
 
 ## Date
-2026-01-31
+2025-12-19
 
 ## Scope
 ModularityKit.Context.ReadOnly
