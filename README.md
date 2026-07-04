@@ -19,7 +19,7 @@ A thread safe, async safe context management system with built-in security bound
 ## Quick Start
 ```csharp
 using ModularityKit.Context.Abstractions;
-using ModularityKit.Context.AspNet;
+using ModularityKit.Context.Extensions;
 
 // 1. Define your context
 public class MyContext : IContext
@@ -31,7 +31,7 @@ public class MyContext : IContext
 }
 
 // 2. Register in DI
-services.AddContext();
+services.AddContext<MyContext>();
 
 // 3. Use in your code
 public class OrderService(IContextAccessor<MyContext> context)

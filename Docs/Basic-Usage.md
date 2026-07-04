@@ -7,7 +7,7 @@ This guide demonstrates the core patterns for using the Context System in your .
 Define a context class implementing `IContext`:
 
 ```csharp
-using Core.Features.Context.Abstractions;
+using ModularityKit.Context.Abstractions;
 
 public class MyAppContext(string userId, string tenantId) : IContext
 {

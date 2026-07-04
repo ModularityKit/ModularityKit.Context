@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using ModularityKit.Context.Abstractions;
+using ModularityKit.Context.Runtime.Stores;
 
-namespace ModularityKit.Context.Runtime;
+namespace ModularityKit.Context.Runtime.Managers;
 
 /// <summary>
 /// Manages the execution of code within a specific <typeparamref name="TContext"/> scope
@@ -19,6 +20,7 @@ public sealed class ContextManager<TContext> : IContextManager<TContext>
     /// </summary>
     public ContextManager(ContextStore<TContext> store, ILogger<ContextManager<TContext>>? logger = null)
     {
+        ArgumentNullException.ThrowIfNull(store);
         _store = store;
         _logger = logger;
     }
@@ -29,30 +31,39 @@ public sealed class ContextManager<TContext> : IContextManager<TContext>
     /// <inheritdoc />
     public async Task ExecuteInContext(TContext context, Func<Task> action)
     {
+        ArgumentNullException.ThrowIfNull(action);
         Log("START", context);
 
-        using (_store.SetCurrent(context))
+        try
         {
-            await action();
+            using (_store.SetCurrent(context))
+            {
+                await action().ConfigureAwait(false);
+            }
         }
-
-        Log("END", context);
+        finally
+        {
+            Log("END", context);
+        }
     }
 
     /// <inheritdoc />
     public async Task<TResult> ExecuteInContext<TResult>(TContext context, Func<Task<TResult>> func)
     {
+        ArgumentNullException.ThrowIfNull(func);
         Log("START", context);
 
-        TResult result;
-        using (_store.SetCurrent(context))
+        try
         {
-            result = await func();
+            using (_store.SetCurrent(context))
+            {
+                return await func().ConfigureAwait(false);
+            }
         }
-
-        Log("END", context);
-
-        return result;
+        finally
+        {
+            Log("END", context);
+        }
     }
 
     private void Log(string phase, TContext context)

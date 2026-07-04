@@ -129,8 +129,8 @@ await contextManager.ExecuteInContext(context, async () =>
 
 Here's a complete console application:
 ```csharp
-using Core.Features.Context.Abstractions;
-using Core.Features.Context.Extensions;
+using ModularityKit.Context.Abstractions;
+using ModularityKit.Context.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 // Define context

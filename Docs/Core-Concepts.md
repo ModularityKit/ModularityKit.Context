@@ -42,8 +42,8 @@ Key characteristics:
 * Does not create or manage contexts — only holds them
 
 Typical operations:
-* GetCurrent()
-* SetCurrent(TContext?)
+* `Current`
+* `SetCurrent(TContext)`
 * Clear()
 
 Your code should never use this directly; instead, use **IContextAccessor** and **IContextManager**.
@@ -56,10 +56,13 @@ Your code should never use this directly; instead, use **IContextAccessor** and 
 
 | Method             | Behavior                                 |
 |--------------------|------------------------------------------|
-| `TryGetCurrent()`  | Returns the context or `null`.           |
-| `GetCurrent()`     | Returns context or `null`; no exception. |
-| `RequireCurrent()` | Throws if no context is active.          |
-| `HasContext()`     | Boolean check.                           |
+| `Current`          | Returns the context or `null`.           |
+| `RequireCurrent()`  | Throws if no context is active.          |
+
+Convenience helpers live in `ModularityKit.Context.Extensions`:
+* `TryGetCurrent()`
+* `GetCurrent()`
+* `HasContext()`
 
 This ensures that service code can reliably depend on context availability without coupling to its lifecycle management.
 
@@ -117,8 +120,7 @@ All services resolved within the async flow may access the context.
 4. **Cleanup**
 Manager restores previous context (if stacked) or clears state.
 
-Contexts **cannot** be nested unless your manager implementation explicitly supports stack semantics.
-The provided implementation allows proper restoration of previous contexts.
+Contexts can be nested. The manager restores the previous context on exit.
 ---
 
 ## Error Handling

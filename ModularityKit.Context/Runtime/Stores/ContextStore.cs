@@ -1,6 +1,6 @@
 ﻿using ModularityKit.Context.Abstractions;
 
-namespace ModularityKit.Context.Runtime;
+namespace ModularityKit.Context.Runtime.Stores;
 
 /// <summary>
 /// Thread-safe and async-safe storage for <typeparamref name="TContext"/> instances using <see cref="AsyncLocal{T}"/>.
@@ -16,15 +16,15 @@ namespace ModularityKit.Context.Runtime;
 /// </remarks>
 public sealed class ContextStore<TContext> where TContext : class, IContext
 {
-    private static readonly AsyncLocal<TContext?> CurrentContext = new();
+    private readonly AsyncLocal<TContext?> _currentContext = new();
 
     /// <summary>
     /// Gets the currently active context, or <c>null</c> if no context is set.
     /// </summary>
     public TContext? Current
     {
-        get => CurrentContext.Value;
-        private set => CurrentContext.Value = value;
+        get => _currentContext.Value;
+        private set => _currentContext.Value = value;
     }
 
     /// <summary>
