@@ -1,6 +1,7 @@
 ﻿using ModularityKit.Context.Abstractions;
+using ModularityKit.Context.ReadOnly.Snapshots;
 
-namespace ModularityKit.Context.ReadOnly;
+namespace ModularityKit.Context.ReadOnly.Accessors;
 
 /// <summary>
 /// Provides a read-only accessor wrapper that exposes <see cref="IReadOnlyContext"/> 
@@ -13,16 +14,23 @@ namespace ModularityKit.Context.ReadOnly;
 /// <item>Ensures thread-safety and consistent snapshot creation.</item>
 /// </list>
 /// </remarks>
-public sealed class ReadOnlyContextAccessor<TContext>(IContextAccessor<TContext> innerAccessor)
-    : IContextAccessor<IReadOnlyContext>
+public sealed class ReadOnlyContextAccessor<TContext> : IContextAccessor<IReadOnlyContext>
     where TContext : class, IContext
 {
+    private readonly IContextAccessor<TContext> _innerAccessor;
+
+    public ReadOnlyContextAccessor(IContextAccessor<TContext> innerAccessor)
+    {
+        ArgumentNullException.ThrowIfNull(innerAccessor);
+        _innerAccessor = innerAccessor;
+    }
+
     /// <inheritdoc />
     public IReadOnlyContext? Current
     {
         get
         {
-            var context = innerAccessor.Current;
+            var context = _innerAccessor.Current;
             return context != null 
                 ? ReadOnlyContextSnapshot.FromContext(context)
                 : null;
@@ -32,7 +40,7 @@ public sealed class ReadOnlyContextAccessor<TContext>(IContextAccessor<TContext>
     /// <inheritdoc />
     public IReadOnlyContext RequireCurrent()
     {
-        var context = innerAccessor.RequireCurrent();
+        var context = _innerAccessor.RequireCurrent();
         return ReadOnlyContextSnapshot.FromContext(context);
     }
 }

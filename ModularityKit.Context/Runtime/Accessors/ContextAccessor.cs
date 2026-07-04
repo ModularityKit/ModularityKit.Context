@@ -1,6 +1,7 @@
 ﻿using ModularityKit.Context.Abstractions;
+using ModularityKit.Context.Runtime.Stores;
 
-namespace ModularityKit.Context.Runtime;
+namespace ModularityKit.Context.Runtime.Accessors;
 
 /// <summary>
 /// Provides access to the current <typeparamref name="TContext"/> instance.
@@ -13,11 +14,19 @@ namespace ModularityKit.Context.Runtime;
 /// <item>Throws an exception if <see cref="RequireCurrent"/> is called when no context is active.</item>
 /// </list>
 /// </remarks>
-public sealed class ContextAccessor<TContext>(ContextStore<TContext> store) : IContextAccessor<TContext>
+public sealed class ContextAccessor<TContext> : IContextAccessor<TContext>
     where TContext : class, IContext
 {
+    private readonly ContextStore<TContext> _store;
+
+    public ContextAccessor(ContextStore<TContext> store)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        _store = store;
+    }
+
     /// <inheritdoc />
-    public TContext? Current => store.Current;
+    public TContext? Current => _store.Current;
     
     /// <inheritdoc />
     public TContext RequireCurrent()
