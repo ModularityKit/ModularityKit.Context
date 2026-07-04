@@ -78,9 +78,12 @@ The accessor is a safe façade around the store.
 
 It provides:
 
+* `Current`
+* `RequireCurrent()`
+
+Convenience helpers live in `ModularityKit.Context.Extensions`:
 * `TryGetCurrent()`
 * `GetCurrent()`
-* `RequireCurrent()`
 * `HasContext()`
 
 Service code depends on this interface to consume context, but never to mutate it.
