@@ -1,4 +1,6 @@
-﻿namespace ModularityKit.Context.Abstractions;
+﻿using ModularityKit.Context.Abstractions.Contracts;
+
+namespace ModularityKit.Context.Abstractions.Access;
 
 /// <summary>
 /// Provides access to the current context instance of type <typeparamref name="TContext"/>.
@@ -11,13 +13,20 @@
 /// <item>Supports dependency injection and generic context retrieval in applications that use scoped or ambient context patterns.</item>
 /// </list>
 /// </remarks>
-public interface IContextAccessor<out TContext> where TContext : class, IContext
+public interface IContextAccessor<TContext> where TContext : class, IContext
 {
     /// <summary>
     /// Gets the current context instance, or <c>null</c> if no context is available.
     /// </summary>
     TContext? Current { get; }
-    
+
+    /// <summary>
+    /// Attempts to retrieve the active context without throwing.
+    /// </summary>
+    /// <param name="context">When this method returns <c>true</c>, contains the active context; otherwise <c>null</c>.</param>
+    /// <returns><c>true</c> when an active context exists; otherwise <c>false</c>.</returns>
+    bool TryGetCurrent(out TContext context);
+
     /// <summary>
     /// Gets the current context instance, throwing an exception if none is available.
     /// </summary>

@@ -1,7 +1,7 @@
-﻿namespace ModularityKit.Context.Abstractions;
+﻿namespace ModularityKit.Context.Abstractions.Contracts;
 
 /// <summary>
-/// Represents read-only variant of <see cref="IContext"/>.
+/// Represents readonly variant of <see cref="IContext"/>.
 /// </summary>
 /// <remarks>
 /// <list type="bullet">
